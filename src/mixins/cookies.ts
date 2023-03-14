@@ -1,8 +1,8 @@
-import type { CookiesToggleButtonData } from './types';
+import type { CookieData } from './types';
 
 export const setCookies = (
   cName: string,
-  cValue: CookiesToggleButtonData[],
+  cValue: CookieData,
   exDays: number
 ) => {
   const d = new Date();

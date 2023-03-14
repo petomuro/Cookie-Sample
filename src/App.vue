@@ -2,13 +2,13 @@
 import Cookie from './components/cookie/Cookie.vue';
 import type { Ref } from 'vue';
 import { ref } from 'vue';
-import { setCookies } from './mixins/cookies';
+import { checkCookies, getCookies, setCookies } from './mixins/cookies';
 import type { CookieData, } from './mixins/types';
 import { findIndexById } from './mixins/utils';
 import sampleData from '../public/sampleData.json';
 
 // Declarations
-const cookieData: Ref<CookieData> = ref(sampleData as CookieData);
+const cookieData: Ref<CookieData> = ref(checkCookies() ? sampleData as CookieData : JSON.parse(getCookies('cookies')) as CookieData);
 
 // Functions
 const toggleCookies = (event: { id: number; isToggled: boolean; optional: boolean }) => {
@@ -54,7 +54,7 @@ const isCookiesToggled = (): boolean => {
 };
 
 const storeCookies = () => {
-  setCookies('cookies', cookieData.value.toggleButtonData, 10);
+  setCookies('cookies', cookieData.value, 10);
 };
 </script>
 
