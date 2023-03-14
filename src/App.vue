@@ -1,82 +1,69 @@
 <script lang="ts" setup>
 import Cookie from './components/cookie/Cookie.vue';
 import type { Ref } from 'vue';
-import { computed, ref } from 'vue';
-import type { CookieData, } from './mixins/types';
+import { ref } from 'vue';
 import { setCookies } from './mixins/cookies';
+import type { CookieData, } from './mixins/types';
+import { findIndexById } from './mixins/utils';
+import sampleData from '../public/sampleData.json';
 
-const cookieData: Ref<CookieData> = ref({
-  title: 'Cookies',
-  description:
-      'Naše stránky používajú na poskytovanie služieb, analýzu návštevnosti a prispôsobenie vybraných informácií súbory cookie. Niektoré cookies môžeme používať len s vaším súhlasom. Kliknutím na položku „Povoliť všetko“ vyjadríte súhlas s prijatím všetkých kategórií cookies. Svoje nastavenia cookies môžete kedykoľvek meniť prostredníctvom nastavení na našich stránkach.',
-  toggleButtonData: {
-    necessaryCookies: {
-      title: 'Potrebné cookies',
-      isToggled: true,
-      disabled: true,
-      handler: () => toggleNecessaryCookies(!cookieData.value.toggleButtonData.necessaryCookies.isToggled)
-    },
-    personalizationCookies: {
-      title: 'Personalizačné cookies',
-      isToggled: false,
-      disabled: false,
-      handler: () => togglePersonalizationCookies(!cookieData.value.toggleButtonData.personalizationCookies.isToggled)
-    },
-    analyticCookies: {
-      title: 'Analytické cookies',
-      isToggled: false,
-      disabled: false,
-      handler: () => toggleAnalyticCookies(!cookieData.value.toggleButtonData.analyticCookies.isToggled),
-    },
-  },
-  buttonData: {
-    accept: {
-      text: 'Povoliť všetko',
-      handler: () => acceptCookies(),
-    },
-    acceptChosenOrDecline: {
-      text: computed(() => isCookiesToggled() ? 'Odmietnuť' : 'Povoliť výber'),
-      handler: () => acceptChosenOrDeclineCookies(),
-    },
+// Declarations
+const cookieData: Ref<CookieData> = ref(sampleData as CookieData);
+
+// Functions
+const toggleCookies = (event: { id: number; isToggled: boolean; optional: boolean }) => {
+  const itemIndex = findIndexById(cookieData.value.toggleButtonData, event.id);
+
+  cookieData.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
+
+  if (event.optional) {
+    const secondItemIndex = findIndexById(cookieData.value.buttonData, 2);
+    const thirdItemIndex = findIndexById(cookieData.value.buttonData, 3);
+
+    if (isCookiesToggled()) {
+      cookieData.value.buttonData[secondItemIndex].isToggled = true;
+      cookieData.value.buttonData[thirdItemIndex].isToggled = false;
+    } else {
+      cookieData.value.buttonData[secondItemIndex].isToggled = false;
+      cookieData.value.buttonData[thirdItemIndex].isToggled = true;
+    }
   }
-});
-
-const toggleNecessaryCookies = (value: boolean) => {
-  cookieData.value.toggleButtonData.necessaryCookies.isToggled = value;
 };
 
-const togglePersonalizationCookies = (value: boolean) => {
-  cookieData.value.toggleButtonData.personalizationCookies.isToggled = value;
-};
+const clickCookies = (action: string) => {
+  if (action === 'accept') {
+    cookieData.value.toggleButtonData.forEach((item) => toggleCookies({ id: item.id, isToggled: true, optional: false }));
+  } else if (action === 'decline') {
+    cookieData.value.toggleButtonData.forEach((item) => {
+      const itemIndex = findIndexById(cookieData.value.toggleButtonData, item.id);
 
-const toggleAnalyticCookies = (value: boolean) => {
-  cookieData.value.toggleButtonData.analyticCookies.isToggled = value;
+      if (itemIndex > 0) {
+        toggleCookies({ id: item.id, isToggled: false, optional: true });
+      }
+    });
+  }
+
+  storeCookies();
 };
 
 const isCookiesToggled = (): boolean => {
-  return !cookieData.value.toggleButtonData.personalizationCookies.isToggled && !cookieData.value.toggleButtonData.analyticCookies.isToggled;
+  const secondItemIndex = findIndexById(cookieData.value.toggleButtonData, 2);
+  const thirdItemIndex = findIndexById(cookieData.value.toggleButtonData, 3);
+
+  return cookieData.value.toggleButtonData[secondItemIndex].isToggled || cookieData.value.toggleButtonData[thirdItemIndex].isToggled;
 };
 
-const acceptCookies = () => {
-  toggleNecessaryCookies(true);
-  togglePersonalizationCookies(true);
-  toggleAnalyticCookies(true);
-  setCookies('cookies', cookieData.value.toggleButtonData, 10);
-};
-
-const acceptChosenOrDeclineCookies = () => {
-  if (isCookiesToggled()) {
-    toggleNecessaryCookies(true);
-    togglePersonalizationCookies(false);
-    toggleAnalyticCookies(false);
-  }
-
+const storeCookies = () => {
   setCookies('cookies', cookieData.value.toggleButtonData, 10);
 };
 </script>
 
 <template>
-  <Cookie :cookie-data="cookieData"/>
+  <Cookie
+      :cookie-data="cookieData"
+      @on-toggle-cookies="toggleCookies($event)"
+      @on-click-cookies="clickCookies($event)"
+  />
 </template>
 
 <style lang="scss" scoped></style>

@@ -1,0 +1,47 @@
+{
+  "title": "Cookies",
+  "description": "Naše stránky používajú na poskytovanie služieb, analýzu návštevnosti a prispôsobenie vybraných informácií súbory cookie. Niektoré cookies môžeme používať len s vaším súhlasom. Kliknutím na položku „Povoliť všetko“ vyjadríte súhlas s prijatím všetkých kategórií cookies. Svoje nastavenia cookies môžete kedykoľvek meniť prostredníctvom nastavení na našich stránkach.",
+  "toggleButtonData": [
+    {
+      "id": 1,
+      "title": "Potrebné cookies",
+      "isToggled": true,
+      "disabled": true,
+      "optional": false
+    },
+    {
+      "id": 2,
+      "title": "Personalizačné cookies",
+      "isToggled": false,
+      "disabled": false,
+      "optional": true
+    },
+    {
+      "id": 3,
+      "title": "Analytické cookies",
+      "isToggled": false,
+      "disabled": false,
+      "optional": true
+    }
+  ],
+  "buttonData": [
+    {
+      "id": 1,
+      "title": "Povoliť všetko",
+      "isToggled": false,
+      "action": "accept"
+    },
+    {
+      "id": 2,
+      "title": "Odmietnuť",
+      "isToggled": false,
+      "action": "decline"
+    },
+    {
+      "id": 3,
+      "title": "Povoliť vybrané",
+      "isToggled": true,
+      "action": "acceptChosen"
+    }
+  ]
+}

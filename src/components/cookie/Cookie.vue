@@ -3,11 +3,22 @@ import { ref } from 'vue';
 import { checkCookies } from '../../mixins/cookies';
 import type { CookieData, } from '../../mixins/types';
 
+// Declarations
 const props = defineProps<{
   cookieData: CookieData;
 }>();
-
+const emits = defineEmits(['onToggleCookies', 'onClickCookies']);
 const isActive = ref(checkCookies());
+
+// Functions
+const toggleCookies = (id: number, isToggled: boolean, optional: boolean) => {
+  emits('onToggleCookies', { id: id, isToggled: !isToggled, optional: optional });
+};
+
+const clickCookies = (action: string) => {
+  emits('onClickCookies', action);
+  closeCookies();
+};
 
 const openCookies = () => {
   isActive.value = true;
@@ -42,27 +53,29 @@ const closeCookies = () => {
     <template #footer>
       <div class="flex justify-content-between align-items-end p-1">
         <div
-            v-for="(item, index) in props.cookieData.toggleButtonData"
-            :key="index"
+            v-for="item in props.cookieData.toggleButtonData"
+            :key="item.id"
             class="flex flex-column justify-content-center align-items-center p-1"
         >
           <p class="text-center">{{ item.title }}</p>
           <ToggleButton
-              v-model="item.isToggled"
               :disabled="item.disabled"
+              :model-value="item.isToggled"
               off-label="Nie"
               on-label="Áno"
+              @change="toggleCookies(item.id, item.isToggled, item.optional)"
           />
         </div>
         <div class="flex flex-column justify-content-center align-items-start">
           <div
-              v-for="(item, index) in props.cookieData.buttonData"
-              :key="index"
+              v-for="item in props.cookieData.buttonData"
+              :key="item.id"
               class="p-1"
           >
             <Button
-                :label="item.text"
-                @click="item.handler(); closeCookies();"
+                v-if="!item.isToggled"
+                :label="item.title"
+                @click="clickCookies(item.action)"
             />
           </div>
         </div>
