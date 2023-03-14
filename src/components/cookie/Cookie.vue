@@ -9,12 +9,18 @@ const props = defineProps<{
 
 const isActive = ref(checkCookies());
 
+const openCookies = () => {
+  isActive.value = true;
+};
+
 const closeCookies = () => {
   isActive.value = false;
 };
 </script>
 
 <template>
+  <Button label="Zobraziť cookies" @click="openCookies()"/>
+
   <Dialog
       v-model:visible="isActive"
       :closable="false"
