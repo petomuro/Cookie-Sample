@@ -17,10 +17,9 @@ const toggleCookies = (event: { id: number; isToggled: boolean; optional: boolea
   cookieData.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
 
   if (event.optional) {
-    const secondItemIndex = findIndexById(cookieData.value.buttonData, 2);
-    const thirdItemIndex = findIndexById(cookieData.value.buttonData, 3);
+    const { secondItemIndex, thirdItemIndex, isToggled } = isCookiesToggled();
 
-    if (isCookiesToggled()) {
+    if (isToggled) {
       cookieData.value.buttonData[secondItemIndex].isToggled = true;
       cookieData.value.buttonData[thirdItemIndex].isToggled = false;
     } else {
@@ -46,11 +45,15 @@ const clickCookies = (action: string) => {
   storeCookies();
 };
 
-const isCookiesToggled = (): boolean => {
+const isCookiesToggled = (): { secondItemIndex: number; thirdItemIndex: number; isToggled: boolean } => {
   const secondItemIndex = findIndexById(cookieData.value.toggleButtonData, 2);
   const thirdItemIndex = findIndexById(cookieData.value.toggleButtonData, 3);
 
-  return cookieData.value.toggleButtonData[secondItemIndex].isToggled || cookieData.value.toggleButtonData[thirdItemIndex].isToggled;
+  return {
+    secondItemIndex: secondItemIndex,
+    thirdItemIndex: thirdItemIndex,
+    isToggled: (cookieData.value.toggleButtonData[secondItemIndex].isToggled || cookieData.value.toggleButtonData[thirdItemIndex].isToggled)
+  };
 };
 
 const storeCookies = () => {
