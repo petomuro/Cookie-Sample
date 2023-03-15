@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { checkCookie } from '../../mixins/cookie';
 import type { CookieData } from '../../mixins/types';
@@ -8,7 +9,7 @@ const props = defineProps<{
   cookieData: CookieData;
 }>();
 const emits = defineEmits(['onToggleCookie', 'onClickCookie']);
-const isActive = ref(checkCookie());
+const isActive: Ref<boolean> = ref(checkCookie());
 
 // Functions
 const toggleCookie = (id: number, isToggled: boolean, optional: boolean) => {

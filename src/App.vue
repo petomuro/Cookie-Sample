@@ -72,7 +72,6 @@ const openCookie = () => {
       {{ data.description }}
     </template>
     <template #footer-toggle-buttons>
-      <!--      Customize based od your needs-->
       <div
           v-for="item in data.toggleButtonData"
           :key="item.id"

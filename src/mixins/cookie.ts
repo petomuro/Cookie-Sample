@@ -5,19 +5,19 @@ export const setCookie = (
   cValue: CookieData,
   exDays: number
 ) => {
-  const d = new Date();
+  const d: Date = new Date();
   d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000);
-  let expires = 'expires=' + d.toUTCString();
+  let expires: string = 'expires=' + d.toUTCString();
 
   document.cookie = `${cName}=${JSON.stringify(cValue)};${expires};path=/`;
 };
 
 export const getCookie = (cName: string): string => {
-  let name = cName + '=';
-  let ca = document.cookie.split(';');
+  const name: string = cName + '=';
+  const ca: string[] = document.cookie.split(';');
 
   for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
+    let c: string = ca[i];
 
     while (c.charAt(0) === ' ') {
       c = c.substring(1);
