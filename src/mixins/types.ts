@@ -2,14 +2,13 @@ export interface CookieToggleButtonData {
   id: number;
   title: string;
   isToggled: boolean;
-  disabled: boolean;
   optional: boolean;
 }
 
 export interface CookieButtonData {
   id: number;
   title: string;
-  isToggled: boolean;
+  isVisible: boolean;
   action: string;
 }
 

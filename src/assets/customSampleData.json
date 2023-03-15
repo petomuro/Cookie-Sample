@@ -6,21 +6,24 @@
       "id": 1,
       "title": "Cookie 1",
       "isToggled": true,
-      "disabled": true,
       "optional": false
     },
     {
       "id": 2,
       "title": "Cookie 2",
       "isToggled": false,
-      "disabled": false,
       "optional": true
     },
     {
       "id": 3,
       "title": "Cookie 3",
       "isToggled": false,
-      "disabled": false,
+      "optional": true
+    },
+    {
+      "id": 4,
+      "title": "Cookie 4",
+      "isToggled": false,
       "optional": true
     }
   ],
@@ -28,19 +31,19 @@
     {
       "id": 1,
       "title": "Accept all",
-      "isToggled": false,
+      "isVisible": true,
       "action": "accept"
     },
     {
       "id": 2,
       "title": "Decline",
-      "isToggled": false,
+      "isVisible": true,
       "action": "decline"
     },
     {
       "id": 3,
       "title": "Accept chosen",
-      "isToggled": true,
+      "isVisible": true,
       "action": "acceptChosen"
     }
   ]

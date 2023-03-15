@@ -6,21 +6,18 @@
       "id": 1,
       "title": "Potrebné cookie",
       "isToggled": true,
-      "disabled": true,
       "optional": false
     },
     {
       "id": 2,
       "title": "Personalizačné cookie",
       "isToggled": false,
-      "disabled": false,
       "optional": true
     },
     {
       "id": 3,
       "title": "Analytické cookie",
       "isToggled": false,
-      "disabled": false,
       "optional": true
     }
   ],
@@ -28,19 +25,19 @@
     {
       "id": 1,
       "title": "Povoliť všetko",
-      "isToggled": false,
+      "isVisible": true,
       "action": "accept"
     },
     {
       "id": 2,
       "title": "Odmietnuť",
-      "isToggled": false,
+      "isVisible": true,
       "action": "decline"
     },
     {
       "id": 3,
       "title": "Povoliť vybrané",
-      "isToggled": true,
+      "isVisible": false,
       "action": "acceptChosen"
     }
   ]
