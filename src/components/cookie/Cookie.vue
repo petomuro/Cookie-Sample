@@ -2,18 +2,22 @@
 import CookieCore from './CookieCore.vue';
 import type { Ref } from 'vue';
 import { ref } from 'vue';
-import { setCookie } from '../../mixins/cookie';
-import type { CookieData, } from '../../mixins/types';
+import { checkCookie, getCookie, setCookie } from '../../mixins/cookie';
+import type { CookieData } from '../../mixins/types';
 import { findIndexById } from '../../mixins/utils';
+import sampleData from '../../assets/sampleData.json';
 
 // Declarations
-const props = defineProps<{
-  cookieData: CookieData;
-}>();
-const cookieData: Ref<CookieData> = ref(props.cookieData);
+const cookieData: Ref<CookieData> = ref(
+  checkCookie() ? sampleData : JSON.parse(getCookie('cookie'))
+);
 
 // Functions
-const toggleCookie = (event: { id: number; isToggled: boolean; optional: boolean }) => {
+const toggleCookie = (event: {
+  id: number;
+  isToggled: boolean;
+  optional: boolean;
+}) => {
   const itemIndex = findIndexById(cookieData.value.toggleButtonData, event.id);
 
   cookieData.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
@@ -33,10 +37,19 @@ const toggleCookie = (event: { id: number; isToggled: boolean; optional: boolean
 
 const clickCookie = (action: string) => {
   if (action === 'accept') {
-    cookieData.value.toggleButtonData.forEach((item) => toggleCookie({ id: item.id, isToggled: true, optional: false }));
+    cookieData.value.toggleButtonData.forEach((item) =>
+      toggleCookie({
+        id: item.id,
+        isToggled: true,
+        optional: false,
+      })
+    );
   } else if (action === 'decline') {
     cookieData.value.toggleButtonData.forEach((item) => {
-      const itemIndex = findIndexById(cookieData.value.toggleButtonData, item.id);
+      const itemIndex = findIndexById(
+        cookieData.value.toggleButtonData,
+        item.id
+      );
 
       if (itemIndex > 0) {
         toggleCookie({ id: item.id, isToggled: false, optional: true });
@@ -47,14 +60,20 @@ const clickCookie = (action: string) => {
   storeCookie();
 };
 
-const isCookieToggled = (): { secondItemIndex: number; thirdItemIndex: number; isToggled: boolean } => {
+const isCookieToggled = (): {
+  secondItemIndex: number;
+  thirdItemIndex: number;
+  isToggled: boolean;
+} => {
   const secondItemIndex = findIndexById(cookieData.value.toggleButtonData, 2);
   const thirdItemIndex = findIndexById(cookieData.value.toggleButtonData, 3);
 
   return {
     secondItemIndex: secondItemIndex,
     thirdItemIndex: thirdItemIndex,
-    isToggled: (cookieData.value.toggleButtonData[secondItemIndex].isToggled || cookieData.value.toggleButtonData[thirdItemIndex].isToggled)
+    isToggled:
+        cookieData.value.toggleButtonData[secondItemIndex].isToggled ||
+        cookieData.value.toggleButtonData[thirdItemIndex].isToggled,
   };
 };
 
@@ -68,7 +87,20 @@ const storeCookie = () => {
       :cookie-data="cookieData"
       @on-toggle-cookie="toggleCookie($event)"
       @on-click-cookie="clickCookie($event)"
-  />
+  >
+    <template #header>
+      <slot name="header"/>
+    </template>
+    <template #default>
+      <slot/>
+    </template>
+    <template #footer-toggle-buttons>
+      <slot name="footer-toggle-buttons"/>
+    </template>
+    <template #footer-buttons>
+      <slot name="footer-buttons"/>
+    </template>
+  </CookieCore>
 </template>
 
 <style lang="scss" scoped></style>
