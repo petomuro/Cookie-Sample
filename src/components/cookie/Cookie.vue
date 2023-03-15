@@ -11,6 +11,7 @@ import sampleData from '../../assets/sampleData.json';
 const cookieData: Ref<CookieData> = ref(
   checkCookie() ? sampleData : JSON.parse(getCookie('cookie'))
 );
+const cookieCoreRef: Ref<CookieCore> = ref(CookieCore);
 
 // Functions
 const toggleCookie = (event: {
@@ -80,10 +81,20 @@ const isCookieToggled = (): {
 const storeCookie = () => {
   setCookie('cookie', cookieData.value, 10);
 };
+
+const openCookie = () => {
+  cookieCoreRef.value.openCookie();
+};
+
+// Expose
+defineExpose({
+  openCookie,
+});
 </script>
 
 <template>
   <CookieCore
+      ref="cookieCoreRef"
       :cookie-data="cookieData"
       @on-toggle-cookie="toggleCookie($event)"
       @on-click-cookie="clickCookie($event)"
