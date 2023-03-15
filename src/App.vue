@@ -68,20 +68,30 @@ const toggleCookie = (id: number, isToggled: boolean) => {
     <template #default="slotProps">
       <p class="p-2">{{ slotProps.description }}</p>
     </template>
-    <template #toggleButtons="slotsProps">
-      <p class="text-center">{{ slotsProps.data.title }}</p>
-      <ToggleButton
-          :disabled="!slotsProps.data.optional"
-          :model-value="slotsProps.data.isToggled"
-          @change="toggleCookie(slotsProps.data.id, !slotsProps.data.isToggled)"
-      />
-    </template>
-    <template #buttons="slotsProps">
-      <Button
-          v-if="slotsProps.data.isVisible"
-          :label="slotsProps.data.title"
-          @click="clickCookie(slotsProps.data.action)"
-      />
+    <template #footer="slotProps">
+      <div class="flex justify-content-between align-items-end p-1">
+        <div
+            v-for="item in slotProps.data.toggleButtonData"
+            :key="item.id"
+            class="flex flex-column justify-content-center align-items-center p-1"
+        >
+          <p class="text-center">{{ item.title }}</p>
+          <ToggleButton
+              :disabled="!item.optional"
+              :model-value="item.isToggled"
+              @change="toggleCookie(item.id, !item.isToggled)"
+          />
+        </div>
+        <div class="flex flex-column justify-content-center align-items-start">
+          <div v-for="item in slotProps.data.buttonData" :key="item.id" class="p-1">
+            <Button
+                v-if="item.isVisible"
+                :label="item.title"
+                @click="clickCookie(item.action)"
+            />
+          </div>
+        </div>
+      </div>
     </template>
   </Cookie>
   <Cookie v-else v-model:visible="cookieVisible"/>

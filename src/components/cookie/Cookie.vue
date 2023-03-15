@@ -127,13 +127,13 @@ onUpdated(() => {
       </slot>
     </template>
     <template #footer>
-      <div class="flex justify-content-between align-items-end p-1">
-        <div
-            v-for="item in data.toggleButtonData"
-            :key="item.id"
-            class="flex flex-column justify-content-center align-items-center p-1"
-        >
-          <slot :data="item" name="toggleButtons">
+      <slot :data="data" name="footer">
+        <div class="flex justify-content-between align-items-end p-1">
+          <div
+              v-for="item in data.toggleButtonData"
+              :key="item.id"
+              class="flex flex-column justify-content-center align-items-center p-1"
+          >
             <p class="text-center">{{ item.title }}</p>
             <ToggleButton
                 :disabled="!item.optional"
@@ -142,20 +142,18 @@ onUpdated(() => {
                 on-label="Áno"
                 @change="toggleCookie(item.id, !item.isToggled, item.optional)"
             />
-          </slot>
-        </div>
-        <div class="flex flex-column justify-content-center align-items-start">
-          <div v-for="item in data.buttonData" :key="item.id" class="p-1">
-            <slot :data="item" name="buttons">
+          </div>
+          <div class="flex flex-column justify-content-center align-items-start">
+            <div v-for="item in data.buttonData" :key="item.id" class="p-1">
               <Button
                   v-if="item.isVisible"
                   :label="item.title"
                   @click="clickCookie(item.action)"
               />
-            </slot>
+            </div>
           </div>
         </div>
-      </div>
+      </slot>
     </template>
   </Dialog>
 </template>
