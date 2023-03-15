@@ -1,17 +1,24 @@
 <script lang="ts" setup>
 import CookieCore from './CookieCore.vue';
 import type { Ref } from 'vue';
-import { ref } from 'vue';
+import { onUpdated, ref } from 'vue';
 import { checkCookie, getCookie, setCookie } from '../../mixins/cookie';
 import type { CookieData } from '../../mixins/types';
 import { findIndexById } from '../../mixins/utils';
 import sampleData from '../../assets/sampleData.json';
 
 // Declarations
-const cookieData: Ref<CookieData> = ref(
-  checkCookie() ? sampleData : JSON.parse(getCookie('cookie'))
-);
-const cookieCoreRef: Ref<CookieCore> = ref(CookieCore);
+const props = defineProps({
+  visible: Boolean,
+  cookieData: {
+    type: Object,
+    default: checkCookie() ? sampleData : JSON.parse(getCookie('cookie')),
+  },
+});
+const emits = defineEmits(['update:visible']);
+
+const visible: Ref<boolean> = ref(checkCookie() || props.visible);
+const data: Ref<CookieData> = ref(props.cookieData) as Ref<CookieData>;
 
 // Functions
 const toggleCookie = (event: {
@@ -19,26 +26,26 @@ const toggleCookie = (event: {
   isToggled: boolean;
   optional: boolean;
 }) => {
-  const itemIndex = findIndexById(cookieData.value.toggleButtonData, event.id);
+  const itemIndex = findIndexById(data.value.toggleButtonData, event.id);
 
-  cookieData.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
+  data.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
 
   if (event.optional) {
     const { secondItemIndex, thirdItemIndex, isToggled } = isCookieToggled();
 
     if (isToggled) {
-      cookieData.value.buttonData[secondItemIndex].isToggled = true;
-      cookieData.value.buttonData[thirdItemIndex].isToggled = false;
+      data.value.buttonData[secondItemIndex].isToggled = true;
+      data.value.buttonData[thirdItemIndex].isToggled = false;
     } else {
-      cookieData.value.buttonData[secondItemIndex].isToggled = false;
-      cookieData.value.buttonData[thirdItemIndex].isToggled = true;
+      data.value.buttonData[secondItemIndex].isToggled = false;
+      data.value.buttonData[thirdItemIndex].isToggled = true;
     }
   }
 };
 
 const clickCookie = (action: string) => {
   if (action === 'accept') {
-    cookieData.value.toggleButtonData.forEach((item) =>
+    data.value.toggleButtonData.forEach((item) =>
       toggleCookie({
         id: item.id,
         isToggled: true,
@@ -46,11 +53,8 @@ const clickCookie = (action: string) => {
       })
     );
   } else if (action === 'decline') {
-    cookieData.value.toggleButtonData.forEach((item) => {
-      const itemIndex = findIndexById(
-        cookieData.value.toggleButtonData,
-        item.id
-      );
+    data.value.toggleButtonData.forEach((item) => {
+      const itemIndex = findIndexById(data.value.toggleButtonData, item.id);
 
       if (itemIndex > 0) {
         toggleCookie({ id: item.id, isToggled: false, optional: true });
@@ -66,52 +70,45 @@ const isCookieToggled = (): {
   thirdItemIndex: number;
   isToggled: boolean;
 } => {
-  const secondItemIndex = findIndexById(cookieData.value.toggleButtonData, 2);
-  const thirdItemIndex = findIndexById(cookieData.value.toggleButtonData, 3);
+  const secondItemIndex = findIndexById(data.value.toggleButtonData, 2);
+  const thirdItemIndex = findIndexById(data.value.toggleButtonData, 3);
 
   return {
     secondItemIndex: secondItemIndex,
     thirdItemIndex: thirdItemIndex,
     isToggled:
-        cookieData.value.toggleButtonData[secondItemIndex].isToggled ||
-        cookieData.value.toggleButtonData[thirdItemIndex].isToggled,
+        data.value.toggleButtonData[secondItemIndex].isToggled ||
+        data.value.toggleButtonData[thirdItemIndex].isToggled,
   };
 };
 
 const storeCookie = () => {
-  setCookie('cookie', cookieData.value, 10);
+  setCookie('cookie', data.value, 10);
 };
 
-const openCookie = () => {
-  cookieCoreRef.value.openCookie();
+const closeCookie = (event: boolean) => {
+  emits('update:visible', event);
+
+  visible.value = event;
 };
 
-// Expose
-defineExpose({
-  openCookie,
+// Lifecycle hooks
+onUpdated(() => {
+  if (props.visible) {
+    visible.value = props.visible;
+  }
 });
 </script>
 
 <template>
   <CookieCore
-      ref="cookieCoreRef"
-      :cookie-data="cookieData"
+      v-if="visible"
+      :cookie-data="data"
+      :visible="visible"
       @on-toggle-cookie="toggleCookie($event)"
       @on-click-cookie="clickCookie($event)"
-  >
-    <template #header>
-      <slot name="header"/>
-    </template>
-    <template #default>
-      <slot/>
-    </template>
-    <template #footer-toggle-buttons>
-      <slot name="footer-toggle-buttons"/>
-    </template>
-    <template #footer-buttons>
-      <slot name="footer-buttons"/>
-    </template>
-  </CookieCore>
+      @update:visible="closeCookie($event)"
+  />
 </template>
 
 <style lang="scss" scoped></style>

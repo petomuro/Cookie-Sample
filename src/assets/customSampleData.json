@@ -1,0 +1,47 @@
+{
+  "title": "Title",
+  "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  "toggleButtonData": [
+    {
+      "id": 1,
+      "title": "Cookie 1",
+      "isToggled": true,
+      "disabled": true,
+      "optional": false
+    },
+    {
+      "id": 2,
+      "title": "Cookie 2",
+      "isToggled": false,
+      "disabled": false,
+      "optional": true
+    },
+    {
+      "id": 3,
+      "title": "Cookie 3",
+      "isToggled": false,
+      "disabled": false,
+      "optional": true
+    }
+  ],
+  "buttonData": [
+    {
+      "id": 1,
+      "title": "Accept all",
+      "isToggled": false,
+      "action": "accept"
+    },
+    {
+      "id": 2,
+      "title": "Decline",
+      "isToggled": false,
+      "action": "decline"
+    },
+    {
+      "id": 3,
+      "title": "Accept chosen",
+      "isToggled": true,
+      "action": "acceptChosen"
+    }
+  ]
+}
