@@ -1,24 +1,24 @@
 {
-  "title": "Cookies",
-  "description": "Naše stránky používajú na poskytovanie služieb, analýzu návštevnosti a prispôsobenie vybraných informácií súbory cookie. Niektoré cookies môžeme používať len s vaším súhlasom. Kliknutím na položku „Povoliť všetko“ vyjadríte súhlas s prijatím všetkých kategórií cookies. Svoje nastavenia cookies môžete kedykoľvek meniť prostredníctvom nastavení na našich stránkach.",
+  "title": "Cookie",
+  "description": "Naše stránky používajú na poskytovanie služieb, analýzu návštevnosti a prispôsobenie vybraných informácií súbory cookie. Niektoré cookie môžeme používať len s vaším súhlasom. Kliknutím na položku „Povoliť všetko“ vyjadríte súhlas s prijatím všetkých kategórií cookie. Svoje nastavenia cookie môžete kedykoľvek meniť prostredníctvom nastavení na našich stránkach.",
   "toggleButtonData": [
     {
       "id": 1,
-      "title": "Potrebné cookies",
+      "title": "Potrebné cookie",
       "isToggled": true,
       "disabled": true,
       "optional": false
     },
     {
       "id": 2,
-      "title": "Personalizačné cookies",
+      "title": "Personalizačné cookie",
       "isToggled": false,
       "disabled": false,
       "optional": true
     },
     {
       "id": 3,
-      "title": "Analytické cookies",
+      "title": "Analytické cookie",
       "isToggled": false,
       "disabled": false,
       "optional": true

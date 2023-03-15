@@ -1,87 +1,74 @@
 <script lang="ts" setup>
+import CookieCore from './CookieCore.vue';
+import type { Ref } from 'vue';
 import { ref } from 'vue';
-import { checkCookies } from '../../mixins/cookies';
+import { setCookie } from '../../mixins/cookie';
 import type { CookieData, } from '../../mixins/types';
+import { findIndexById } from '../../mixins/utils';
 
 // Declarations
 const props = defineProps<{
   cookieData: CookieData;
 }>();
-const emits = defineEmits(['onToggleCookies', 'onClickCookies']);
-const isActive = ref(checkCookies());
+const cookieData: Ref<CookieData> = ref(props.cookieData);
 
 // Functions
-const toggleCookies = (id: number, isToggled: boolean, optional: boolean) => {
-  emits('onToggleCookies', { id: id, isToggled: !isToggled, optional: optional });
+const toggleCookie = (event: { id: number; isToggled: boolean; optional: boolean }) => {
+  const itemIndex = findIndexById(cookieData.value.toggleButtonData, event.id);
+
+  cookieData.value.toggleButtonData[itemIndex].isToggled = event.isToggled;
+
+  if (event.optional) {
+    const { secondItemIndex, thirdItemIndex, isToggled } = isCookieToggled();
+
+    if (isToggled) {
+      cookieData.value.buttonData[secondItemIndex].isToggled = true;
+      cookieData.value.buttonData[thirdItemIndex].isToggled = false;
+    } else {
+      cookieData.value.buttonData[secondItemIndex].isToggled = false;
+      cookieData.value.buttonData[thirdItemIndex].isToggled = true;
+    }
+  }
 };
 
-const clickCookies = (action: string) => {
-  emits('onClickCookies', action);
-  closeCookies();
+const clickCookie = (action: string) => {
+  if (action === 'accept') {
+    cookieData.value.toggleButtonData.forEach((item) => toggleCookie({ id: item.id, isToggled: true, optional: false }));
+  } else if (action === 'decline') {
+    cookieData.value.toggleButtonData.forEach((item) => {
+      const itemIndex = findIndexById(cookieData.value.toggleButtonData, item.id);
+
+      if (itemIndex > 0) {
+        toggleCookie({ id: item.id, isToggled: false, optional: true });
+      }
+    });
+  }
+
+  storeCookie();
 };
 
-const openCookies = () => {
-  isActive.value = true;
+const isCookieToggled = (): { secondItemIndex: number; thirdItemIndex: number; isToggled: boolean } => {
+  const secondItemIndex = findIndexById(cookieData.value.toggleButtonData, 2);
+  const thirdItemIndex = findIndexById(cookieData.value.toggleButtonData, 3);
+
+  return {
+    secondItemIndex: secondItemIndex,
+    thirdItemIndex: thirdItemIndex,
+    isToggled: (cookieData.value.toggleButtonData[secondItemIndex].isToggled || cookieData.value.toggleButtonData[thirdItemIndex].isToggled)
+  };
 };
 
-const closeCookies = () => {
-  isActive.value = false;
+const storeCookie = () => {
+  setCookie('cookie', cookieData.value, 10);
 };
 </script>
 
 <template>
-  <Button label="Zobraziť cookies" @click="openCookies()"/>
-
-  <Dialog
-      v-model:visible="isActive"
-      :closable="false"
-      :close-icon="undefined"
-      :close-on-escape="false"
-      :draggable="false"
-      :modal="true"
-      class="w-auto lg:w-9 xl:w-7"
-      position="bottom"
-  >
-    <template #header>
-      <h3 class="p-2">{{ props.cookieData.title }}</h3>
-    </template>
-    <template #default>
-      <p class="p-2">
-        {{ props.cookieData.description }}
-      </p>
-    </template>
-    <template #footer>
-      <div class="flex justify-content-between align-items-end p-1">
-        <div
-            v-for="item in props.cookieData.toggleButtonData"
-            :key="item.id"
-            class="flex flex-column justify-content-center align-items-center p-1"
-        >
-          <p class="text-center">{{ item.title }}</p>
-          <ToggleButton
-              :disabled="item.disabled"
-              :model-value="item.isToggled"
-              off-label="Nie"
-              on-label="Áno"
-              @change="toggleCookies(item.id, item.isToggled, item.optional)"
-          />
-        </div>
-        <div class="flex flex-column justify-content-center align-items-start">
-          <div
-              v-for="item in props.cookieData.buttonData"
-              :key="item.id"
-              class="p-1"
-          >
-            <Button
-                v-if="!item.isToggled"
-                :label="item.title"
-                @click="clickCookies(item.action)"
-            />
-          </div>
-        </div>
-      </div>
-    </template>
-  </Dialog>
+  <CookieCore
+      :cookie-data="cookieData"
+      @on-toggle-cookie="toggleCookie($event)"
+      @on-click-cookie="clickCookie($event)"
+  />
 </template>
 
 <style lang="scss" scoped></style>

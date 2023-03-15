@@ -1,6 +1,6 @@
 import type { CookieData } from './types';
 
-export const setCookies = (
+export const setCookie = (
   cName: string,
   cValue: CookieData,
   exDays: number
@@ -12,7 +12,7 @@ export const setCookies = (
   document.cookie = `${cName}=${JSON.stringify(cValue)};${expires};path=/`;
 };
 
-export const getCookies = (cName: string): string => {
+export const getCookie = (cName: string): string => {
   let name = cName + '=';
   let ca = document.cookie.split(';');
 
@@ -31,6 +31,6 @@ export const getCookies = (cName: string): string => {
   return '';
 };
 
-export const checkCookies = (): boolean => {
-  return getCookies('cookies') === '';
+export const checkCookie = (): boolean => {
+  return getCookie('cookie') === '';
 };

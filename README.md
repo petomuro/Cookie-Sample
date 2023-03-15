@@ -1,6 +1,6 @@
-# Cookies-Sample
+# Cookie-Sample
 
-Cookies-Sample - Simple Cookies Sample App created in Vue 3 + TypeScript and Vite.
+Cookie-Sample - Simple Cookie Sample App created in Vue 3 + TypeScript and Vite.
 
 ## Project setup
 

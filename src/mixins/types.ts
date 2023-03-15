@@ -1,4 +1,4 @@
-export interface CookiesToggleButtonData {
+export interface CookieToggleButtonData {
   id: number;
   title: string;
   isToggled: boolean;
@@ -6,7 +6,7 @@ export interface CookiesToggleButtonData {
   optional: boolean;
 }
 
-export interface CookiesButtonData {
+export interface CookieButtonData {
   id: number;
   title: string;
   isToggled: boolean;
@@ -16,6 +16,6 @@ export interface CookiesButtonData {
 export interface CookieData {
   title: string;
   description: string;
-  toggleButtonData: CookiesToggleButtonData[];
-  buttonData: CookiesButtonData[];
+  toggleButtonData: CookieToggleButtonData[];
+  buttonData: CookieButtonData[];
 }
