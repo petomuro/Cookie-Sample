@@ -1,18 +1,12 @@
-import type { CookieData } from './types';
-
-export const setCookie = (
-  cName: string | undefined,
-  cValue: CookieData,
-  exDays: number
-) => {
+export const setCookie = (cName: string, cValue: string, exDays: number) => {
   const d: Date = new Date();
   d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000);
   let expires: string = 'expires=' + d.toUTCString();
 
-  document.cookie = `${cName}=${JSON.stringify(cValue)};${expires};path=/`;
+  document.cookie = `${cName}=${cValue};${expires};path=/`;
 };
 
-export const getCookie = (cName: string | undefined): string => {
+export const getCookie = (cName: string): string => {
   const name: string = cName + '=';
   const ca: string[] = document.cookie.split(';');
 
@@ -31,6 +25,6 @@ export const getCookie = (cName: string | undefined): string => {
   return '';
 };
 
-export const checkCookie = (cName: string | undefined): boolean => {
+export const checkCookie = (cName: string): boolean => {
   return getCookie(cName) === '';
 };

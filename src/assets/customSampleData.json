@@ -4,24 +4,28 @@
   "toggleButtonData": [
     {
       "id": 1,
+      "name": "cookie1",
       "title": "Cookie 1",
       "isToggled": true,
       "optional": false
     },
     {
       "id": 2,
+      "name": "cookie2",
       "title": "Cookie 2",
       "isToggled": false,
       "optional": true
     },
     {
       "id": 3,
+      "name": "cookie3",
       "title": "Cookie 3",
       "isToggled": false,
       "optional": true
     },
     {
       "id": 4,
+      "name": "cookie4",
       "title": "Cookie 4",
       "isToggled": false,
       "optional": true

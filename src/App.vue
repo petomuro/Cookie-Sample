@@ -2,16 +2,19 @@
 import Cookie from './components/cookie/Cookie.vue';
 import type { Ref } from 'vue';
 import { ref } from 'vue';
-import type { CookieData } from './mixins/types';
-import { checkCookie, getCookie, setCookie } from './mixins/cookie';
+import type { CookieData, CookiePosition } from './mixins/types';
+import { checkCookie, setCookie } from './mixins/cookie';
 import { findIndexById } from './mixins/utils';
 import customSampleData from './assets/customSampleData.json';
 
 // Declarations
-const cookieName: Ref<string> = ref('cookie');
-const cookieData: Ref<CookieData> = ref(checkCookie(cookieName.value) ? customSampleData : JSON.parse(getCookie(cookieName.value)));
-const cookieVisible: Ref<boolean> = ref(false);
-const isCustomized: Ref<boolean> = ref(false);
+const cookieName: Ref<string> = ref('COOKIE_AGREEMENT');
+const cookieClasses: Ref<string> = ref('w-auto lg:w-11 xl:w-9');
+const cookieData: Ref<CookieData> = ref(customSampleData);
+const cookieExDays: Ref<number> = ref(10);
+const cookiePosition: Ref<CookiePosition> = ref('top');
+const cookieVisible: Ref<boolean> = ref(checkCookie(cookieName.value) || false);
+const isCustomized: Ref<boolean> = ref(true);
 
 // Functions
 const clickCookie = (action: string) => {
@@ -28,19 +31,18 @@ const clickCookie = (action: string) => {
   });
 
   storeCookie();
-  closeCookie();
-};
 
-const closeCookie = () => {
   cookieVisible.value = false;
 };
 
-const openCookie = () => {
-  cookieVisible.value = true;
-};
-
 const storeCookie = () => {
-  setCookie(cookieName.value, cookieData.value, 10);
+  const names = cookieData.value.toggleButtonData.map((item) =>
+    item.isToggled ? item.name : undefined
+  );
+  const filteredNames = names.filter((item) => item !== undefined);
+  const concatNames = filteredNames.join('_');
+
+  setCookie(cookieName.value, concatNames, cookieExDays.value);
 };
 
 const toggleCookie = (id: number, isToggled: boolean) => {
@@ -53,14 +55,17 @@ const toggleCookie = (id: number, isToggled: boolean) => {
 <template>
   <Button
       :label="isCustomized ? 'Show cookie' : 'Zobraziť cookie'"
-      @click="openCookie()"
+      @click="cookieVisible = true;"
   />
 
   <Cookie
       v-if="isCustomized"
       v-model:visible="cookieVisible"
+      :cookie-classes="cookieClasses"
       :cookie-data="cookieData"
+      :cookie-ex-days="cookieExDays"
       :cookie-name="cookieName"
+      :cookie-position="cookiePosition"
   >
     <template #header="slotProps">
       <h3 class="p-2">{{ slotProps.title }}</h3>
@@ -83,7 +88,11 @@ const toggleCookie = (id: number, isToggled: boolean) => {
           />
         </div>
         <div class="flex flex-column justify-content-center align-items-start">
-          <div v-for="item in slotProps.data.buttonData" :key="item.id" class="p-1">
+          <div
+              v-for="item in slotProps.data.buttonData"
+              :key="item.id"
+              class="p-1"
+          >
             <Button
                 v-if="item.isVisible"
                 :label="item.title"

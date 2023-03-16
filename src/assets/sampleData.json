@@ -4,18 +4,21 @@
   "toggleButtonData": [
     {
       "id": 1,
+      "name": "necessary",
       "title": "Potrebné cookie",
       "isToggled": true,
       "optional": false
     },
     {
       "id": 2,
+      "name": "personalization",
       "title": "Personalizačné cookie",
       "isToggled": false,
       "optional": true
     },
     {
       "id": 3,
+      "name": "analytics",
       "title": "Analytické cookie",
       "isToggled": false,
       "optional": true

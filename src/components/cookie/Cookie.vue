@@ -1,26 +1,45 @@
 <script lang="ts" setup>
-import type { Ref } from 'vue';
+import type { PropType, Ref } from 'vue';
 import { onUpdated, ref } from 'vue';
-import type { CookieData } from '../../mixins/types';
-import { checkCookie, getCookie, setCookie } from '../../mixins/cookie';
+import type { CookieData, CookiePosition } from '../../mixins/types';
+import { checkCookie, setCookie } from '../../mixins/cookie';
 import { findIndexById } from '../../mixins/utils';
 import sampleData from '../../assets/sampleData.json';
 
 // Declarations
 const props = defineProps({
   cookieData: {
-    type: Object,
+    type: Object as PropType<CookieData>,
     default: sampleData,
   },
-  cookieName: String,
+  cookieClasses: {
+    type: String,
+    default: 'w-auto lg:w-9 xl:w-7',
+  },
+  cookieExDays: {
+    type: Number,
+    default: 10,
+  },
+  cookieName: {
+    type: String,
+    default: 'COOKIE_AGREEMENT',
+  },
+  cookiePosition: {
+    type: String as PropType<CookiePosition>,
+    default: 'bottom',
+  },
   visible: {
     type: Boolean,
-    required: true
+    default: false,
+    required: true,
   },
 });
 const emits = defineEmits(['update:visible']);
-const name: Ref<string | undefined> = ref(props.cookieName);
-const data: Ref<CookieData> = ref(checkCookie(name.value) ? props.cookieData : JSON.parse(getCookie(name.value))) as Ref<CookieData>;
+const name: Ref<string> = ref(props.cookieName);
+const classes: Ref<string> = ref(props.cookieClasses);
+const data: Ref<CookieData> = ref(props.cookieData);
+const exDays: Ref<number> = ref(props.cookieExDays);
+const position: Ref<CookiePosition> = ref(props.cookiePosition);
 const visible: Ref<boolean> = ref(checkCookie(name.value) || props.visible);
 
 // Functions
@@ -38,32 +57,35 @@ const clickCookie = (action: string) => {
   });
 
   storeCookie();
-  closeCookie();
-};
 
-const closeCookie = () => {
   emits('update:visible', false);
-
-  visible.value = false;
 };
 
-const isCookieToggled = (): { secondItemIndex: number; thirdItemIndex: number; isToggled: boolean } => {
+const isCookieToggled = (): {
+  secondItemIndex: number;
+  thirdItemIndex: number;
+  isToggled: boolean;
+} => {
   const secondItemIndex = findIndexById(data.value.toggleButtonData, 2);
   const thirdItemIndex = findIndexById(data.value.toggleButtonData, 3);
 
   return {
     secondItemIndex: secondItemIndex,
     thirdItemIndex: thirdItemIndex,
-    isToggled: data.value.toggleButtonData[secondItemIndex].isToggled || data.value.toggleButtonData[thirdItemIndex].isToggled,
+    isToggled:
+        data.value.toggleButtonData[secondItemIndex].isToggled ||
+        data.value.toggleButtonData[thirdItemIndex].isToggled,
   };
 };
 
-const openCookie = () => {
-  visible.value = props.visible;
-};
-
 const storeCookie = () => {
-  setCookie(name.value, data.value, 10);
+  const names = data.value.toggleButtonData.map((item) =>
+    item.isToggled ? item.name : undefined
+  );
+  const filteredNames = names.filter((item) => item !== undefined);
+  const concatNames = filteredNames.join('_');
+
+  setCookie(name.value, concatNames, exDays.value);
 };
 
 const toggleCookie = (id: number, isToggled: boolean, optional: boolean) => {
@@ -84,37 +106,51 @@ const toggleCookie = (id: number, isToggled: boolean, optional: boolean) => {
   }
 };
 
+const updateCookieClasses = () => {
+  classes.value = props.cookieClasses;
+};
+
 const updateCookieData = () => {
-  data.value = props.cookieData as CookieData;
+  data.value = props.cookieData;
+};
+
+const updateCookieExDays = () => {
+  exDays.value = props.cookieExDays;
 };
 
 const updateCookieName = () => {
   name.value = props.cookieName;
 };
 
+const updateCookiePosition = () => {
+  position.value = props.cookiePosition;
+};
+
+const updateCookieVisible = () => {
+  visible.value = props.visible;
+};
+
 // Lifecycle hooks
 onUpdated(() => {
-  updateCookieName();
+  updateCookieClasses();
   updateCookieData();
-
-  if (props.visible) {
-    openCookie();
-  } else {
-    closeCookie();
-  }
+  updateCookieName();
+  updateCookieExDays();
+  updateCookiePosition();
+  updateCookieVisible();
 });
 </script>
 
 <template>
   <Dialog
       v-model:visible="visible"
+      :class="classes"
       :closable="false"
       :close-icon="undefined"
       :close-on-escape="false"
       :draggable="false"
       :modal="true"
-      class="w-auto lg:w-9 xl:w-7"
-      position="bottom"
+      :position="position"
   >
     <template #header>
       <slot :title="data.title" name="header">
@@ -143,7 +179,9 @@ onUpdated(() => {
                 @change="toggleCookie(item.id, !item.isToggled, item.optional)"
             />
           </div>
-          <div class="flex flex-column justify-content-center align-items-start">
+          <div
+              class="flex flex-column justify-content-center align-items-start"
+          >
             <div v-for="item in data.buttonData" :key="item.id" class="p-1">
               <Button
                   v-if="item.isVisible"
