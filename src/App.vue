@@ -11,7 +11,7 @@ import customSampleData from './assets/customSampleData.json';
 const cookieName: Ref<string> = ref('cookie');
 const cookieData: Ref<CookieData> = ref(checkCookie(cookieName.value) ? customSampleData : JSON.parse(getCookie(cookieName.value)));
 const cookieVisible: Ref<boolean> = ref(false);
-const isCustomized: Ref<boolean> = ref(true);
+const isCustomized: Ref<boolean> = ref(false);
 
 // Functions
 const clickCookie = (action: string) => {

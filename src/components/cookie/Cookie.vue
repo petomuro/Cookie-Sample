@@ -13,7 +13,10 @@ const props = defineProps({
     default: sampleData,
   },
   cookieName: String,
-  visible: Boolean,
+  visible: {
+    type: Boolean,
+    required: true
+  },
 });
 const emits = defineEmits(['update:visible']);
 const name: Ref<string | undefined> = ref(props.cookieName);
@@ -68,17 +71,15 @@ const toggleCookie = (id: number, isToggled: boolean, optional: boolean) => {
 
   data.value.toggleButtonData[itemIndex].isToggled = isToggled;
 
-  if (props.cookieName === undefined) {
-    if (optional) {
-      const { secondItemIndex, thirdItemIndex, isToggled } = isCookieToggled();
+  if (optional) {
+    const { secondItemIndex, thirdItemIndex, isToggled } = isCookieToggled();
 
-      if (isToggled) {
-        data.value.buttonData[secondItemIndex].isVisible = false;
-        data.value.buttonData[thirdItemIndex].isVisible = true;
-      } else {
-        data.value.buttonData[secondItemIndex].isVisible = true;
-        data.value.buttonData[thirdItemIndex].isVisible = false;
-      }
+    if (isToggled) {
+      data.value.buttonData[secondItemIndex].isVisible = false;
+      data.value.buttonData[thirdItemIndex].isVisible = true;
+    } else {
+      data.value.buttonData[secondItemIndex].isVisible = true;
+      data.value.buttonData[thirdItemIndex].isVisible = false;
     }
   }
 };
@@ -106,7 +107,6 @@ onUpdated(() => {
 
 <template>
   <Dialog
-      v-if="visible"
       v-model:visible="visible"
       :closable="false"
       :close-icon="undefined"
