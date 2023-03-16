@@ -14,7 +14,7 @@ const cookieData: Ref<CookieData> = ref(customSampleData);
 const cookieExDays: Ref<number> = ref(10);
 const cookiePosition: Ref<CookiePosition> = ref('top');
 const cookieVisible: Ref<boolean> = ref(checkCookie(cookieName.value) || false);
-const isCustomized: Ref<boolean> = ref(true);
+const isCustomized: Ref<boolean> = ref(false);
 
 // Functions
 const clickCookie = (action: string) => {
@@ -55,12 +55,12 @@ const toggleCookie = (id: number, isToggled: boolean) => {
 <template>
   <Button
       :label="isCustomized ? 'Show cookie' : 'Zobraziť cookie'"
-      @click="cookieVisible = true;"
+      @click="cookieVisible = true"
   />
 
   <Cookie
       v-if="isCustomized"
-      v-model:visible="cookieVisible"
+      v-model:cookie-visible="cookieVisible"
       :cookie-classes="cookieClasses"
       :cookie-data="cookieData"
       :cookie-ex-days="cookieExDays"
@@ -103,7 +103,7 @@ const toggleCookie = (id: number, isToggled: boolean) => {
       </div>
     </template>
   </Cookie>
-  <Cookie v-else v-model:visible="cookieVisible"/>
+  <Cookie v-else v-model:cookie-visible="cookieVisible"/>
 </template>
 
 <style lang="scss" scoped></style>

@@ -28,19 +28,21 @@ const props = defineProps({
     type: String as PropType<CookiePosition>,
     default: 'bottom',
   },
-  visible: {
+  cookieVisible: {
     type: Boolean,
     default: false,
     required: true,
   },
 });
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:cookieVisible']);
 const name: Ref<string> = ref(props.cookieName);
 const classes: Ref<string> = ref(props.cookieClasses);
 const data: Ref<CookieData> = ref(props.cookieData);
 const exDays: Ref<number> = ref(props.cookieExDays);
 const position: Ref<CookiePosition> = ref(props.cookiePosition);
-const visible: Ref<boolean> = ref(checkCookie(name.value) || props.visible);
+const visible: Ref<boolean> = ref(
+  checkCookie(name.value) || props.cookieVisible
+);
 
 // Functions
 const clickCookie = (action: string) => {
@@ -58,7 +60,7 @@ const clickCookie = (action: string) => {
 
   storeCookie();
 
-  emits('update:visible', false);
+  emits('update:cookieVisible', false);
 };
 
 const isCookieToggled = (): {
@@ -106,37 +108,12 @@ const toggleCookie = (id: number, isToggled: boolean, optional: boolean) => {
   }
 };
 
-const updateCookieClasses = () => {
-  classes.value = props.cookieClasses;
-};
-
-const updateCookieData = () => {
-  data.value = props.cookieData;
-};
-
-const updateCookieExDays = () => {
-  exDays.value = props.cookieExDays;
-};
-
-const updateCookieName = () => {
-  name.value = props.cookieName;
-};
-
-const updateCookiePosition = () => {
-  position.value = props.cookiePosition;
-};
-
 const updateCookieVisible = () => {
-  visible.value = props.visible;
+  visible.value = props.cookieVisible;
 };
 
 // Lifecycle hooks
 onUpdated(() => {
-  updateCookieClasses();
-  updateCookieData();
-  updateCookieName();
-  updateCookieExDays();
-  updateCookiePosition();
   updateCookieVisible();
 });
 </script>
