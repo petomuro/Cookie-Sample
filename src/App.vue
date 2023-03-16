@@ -8,10 +8,10 @@ import { findIndexById } from './mixins/utils';
 import customSampleData from './assets/customSampleData.json';
 
 // Declarations
-const cookieName: Ref<string> = ref('COOKIE_AGREEMENT');
+const cookieName: Ref<string> = ref('CUSTOMIZED_COOKIE_AGREEMENT');
 const cookieClasses: Ref<string> = ref('w-auto lg:w-11 xl:w-9');
 const cookieData: Ref<CookieData> = ref(customSampleData);
-const cookieExDays: Ref<number> = ref(10);
+const cookieExDays: Ref<number> = ref(20);
 const cookiePosition: Ref<CookiePosition> = ref('top');
 const cookieVisible: Ref<boolean> = ref(checkCookie(cookieName.value) || false);
 const isCustomized: Ref<boolean> = ref(false);
