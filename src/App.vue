@@ -8,18 +8,19 @@ import { findIndexById } from './mixins/utils';
 import customSampleData from './assets/customSampleData.json';
 
 // Declarations
-const cookieName: Ref<string> = ref('CUSTOMIZED_COOKIE_AGREEMENT');
-const cookieClasses: Ref<string> = ref('w-auto lg:w-11 xl:w-9');
-const cookieData: Ref<CookieData> = ref(customSampleData);
-const cookieExDays: Ref<number> = ref(20);
-const cookiePosition: Ref<CookiePosition> = ref('top');
-const cookieVisible: Ref<boolean> = ref(checkCookie(cookieName.value) || false);
-const isCustomized: Ref<boolean> = ref(false);
+const cookieVisible: Ref<boolean> = ref(false);
+const customizedCookieName: Ref<string> = ref('CUSTOMIZED_COOKIE_AGREEMENT');
+const customizedCookieClasses: Ref<string> = ref('w-auto lg:w-11 xl:w-9');
+const customizedCookieData: Ref<CookieData> = ref(customSampleData);
+const customizedCookieExDays: Ref<number> = ref(20);
+const customizedCookiePosition: Ref<CookiePosition> = ref('top');
+const customizedCookieVisible: Ref<boolean> = ref(checkCookie(customizedCookieName.value) || false);
+const isCustomized: Ref<boolean> = ref(true);
 
 // Functions
 const clickCookie = (action: string) => {
-  cookieData.value.toggleButtonData.forEach((item) => {
-    const itemIndex = findIndexById(cookieData.value.toggleButtonData, item.id);
+  customizedCookieData.value.toggleButtonData.forEach((item) => {
+    const itemIndex = findIndexById(customizedCookieData.value.toggleButtonData, item.id);
 
     if (itemIndex > 0) {
       if (action === 'accept') {
@@ -32,40 +33,38 @@ const clickCookie = (action: string) => {
 
   storeCookie();
 
-  cookieVisible.value = false;
+  customizedCookieVisible.value = false;
 };
 
 const storeCookie = () => {
-  const names = cookieData.value.toggleButtonData.map((item) =>
+  const names = customizedCookieData.value.toggleButtonData.map((item) =>
     item.isToggled ? item.name : undefined
   );
   const filteredNames = names.filter((item) => item !== undefined);
   const concatNames = filteredNames.join('_');
 
-  setCookie(cookieName.value, concatNames, cookieExDays.value);
+  setCookie(customizedCookieName.value, concatNames, customizedCookieExDays.value);
 };
 
 const toggleCookie = (id: number, isToggled: boolean) => {
-  const itemIndex = findIndexById(cookieData.value.toggleButtonData, id);
+  const itemIndex = findIndexById(customizedCookieData.value.toggleButtonData, id);
 
-  cookieData.value.toggleButtonData[itemIndex].isToggled = isToggled;
+  customizedCookieData.value.toggleButtonData[itemIndex].isToggled = isToggled;
 };
 </script>
 
 <template>
-  <Button
-      :label="isCustomized ? 'Show cookie' : 'Zobraziť cookie'"
-      @click="cookieVisible = true"
-  />
+  <Button v-if="isCustomized" :label="'Show cookie'" @click="customizedCookieVisible = true;"/>
+  <Button v-else :label="'Zobraziť cookie'" @click="cookieVisible = true;"/>
 
   <Cookie
       v-if="isCustomized"
-      v-model:cookie-visible="cookieVisible"
-      :cookie-classes="cookieClasses"
-      :cookie-data="cookieData"
-      :cookie-ex-days="cookieExDays"
-      :cookie-name="cookieName"
-      :cookie-position="cookiePosition"
+      v-model:cookie-visible="customizedCookieVisible"
+      :cookie-classes="customizedCookieClasses"
+      :cookie-data="customizedCookieData"
+      :cookie-ex-days="customizedCookieExDays"
+      :cookie-name="customizedCookieName"
+      :cookie-position="customizedCookiePosition"
   >
     <template #header="slotProps">
       <h3 class="p-2">{{ slotProps.title }}</h3>

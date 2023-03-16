@@ -8,13 +8,13 @@ import sampleData from '../../assets/sampleData.json';
 
 // Declarations
 const props = defineProps({
-  cookieData: {
-    type: Object as PropType<CookieData>,
-    default: sampleData,
-  },
   cookieClasses: {
     type: String,
     default: 'w-auto lg:w-9 xl:w-7',
+  },
+  cookieData: {
+    type: Object as PropType<CookieData>,
+    default: sampleData,
   },
   cookieExDays: {
     type: Number,
@@ -59,6 +59,8 @@ const clickCookie = (action: string) => {
   });
 
   storeCookie();
+
+  visible.value = false;
 
   emits('update:cookieVisible', false);
 };
