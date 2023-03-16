@@ -15,7 +15,7 @@ const customizedCookieData: Ref<CookieData> = ref(customSampleData);
 const customizedCookieExDays: Ref<number> = ref(20);
 const customizedCookiePosition: Ref<CookiePosition> = ref('top');
 const customizedCookieVisible: Ref<boolean> = ref(checkCookie(customizedCookieName.value) || false);
-const isCustomized: Ref<boolean> = ref(true);
+const isCustomized: Ref<boolean> = ref(false);
 
 // Functions
 const clickCookie = (action: string) => {
