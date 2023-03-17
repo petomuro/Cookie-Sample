@@ -77,8 +77,8 @@ const isCookieToggled = (): {
     secondItemIndex: secondItemIndex,
     thirdItemIndex: thirdItemIndex,
     isToggled:
-        data.value.toggleButtonData[secondItemIndex].isToggled ||
-        data.value.toggleButtonData[thirdItemIndex].isToggled,
+      data.value.toggleButtonData[secondItemIndex].isToggled ||
+      data.value.toggleButtonData[thirdItemIndex].isToggled,
   };
 };
 
@@ -122,50 +122,62 @@ onUpdated(() => {
 
 <template>
   <Dialog
-      v-model:visible="visible"
-      :class="classes"
-      :closable="false"
-      :close-icon="undefined"
-      :close-on-escape="false"
-      :draggable="false"
-      :modal="true"
-      :position="position"
+    v-model:visible="visible"
+    :class="classes"
+    :closable="false"
+    :close-icon="undefined"
+    :close-on-escape="false"
+    :draggable="false"
+    :position="position"
   >
     <template #header>
       <slot :title="data.title" name="header">
-        <h3 class="p-2">{{ data.title }}</h3>
+        <h3 class="text-sm sm:text-sm md:text-base lg:text-lg xl:text-xl m-0">
+          {{ data.title }}
+        </h3>
       </slot>
     </template>
     <template #default>
       <slot :description="data.description">
-        <p class="p-2">{{ data.description }}</p>
+        <p class="text-sm sm:text-sm md:text-md lg:text-base m-0">
+          {{ data.description }}
+        </p>
       </slot>
     </template>
     <template #footer>
       <slot :data="data" name="footer">
-        <div class="flex justify-content-between align-items-end p-1">
+        <div class="grid grid-nogutter justify-content-between">
           <div
-              v-for="item in data.toggleButtonData"
-              :key="item.id"
-              class="flex flex-column justify-content-center align-items-center p-1"
+            v-for="item in data.toggleButtonData"
+            :key="item.id"
+            class="grid grid-nogutter flex-column justify-content-center align-items-center col-12 md:col-3 p-1"
           >
-            <p class="text-center">{{ item.title }}</p>
-            <ToggleButton
-                :disabled="!item.optional"
-                :model-value="item.isToggled"
-                off-label="Nie"
-                on-label="Áno"
-                @change="toggleCookie(item.id, !item.isToggled, item.optional)"
+            <p
+              class="text-sm sm:text-sm md:text-md lg:text-base text-center mt-0"
+            >
+              {{ item.title }}
+            </p>
+            <Checkbox
+              :binary="true"
+              :disabled="!item.optional"
+              :model-value="item.isToggled"
+              @change="toggleCookie(item.id, !item.isToggled, item.optional)"
             />
           </div>
           <div
-              class="flex flex-column justify-content-center align-items-start"
+            class="grid grid-nogutter flex-column justify-content-center align-items-stretch col-12 md:col-3"
           >
-            <div v-for="item in data.buttonData" :key="item.id" class="p-1">
+            <div
+              v-for="item in data.buttonData.filter(
+                (element) => element.isVisible
+              )"
+              :key="item.id"
+              class="flex flex-column justify-content-center align-items-stretch p-1"
+            >
               <Button
-                  v-if="item.isVisible"
-                  :label="item.title"
-                  @click="clickCookie(item.action)"
+                :label="item.title"
+                class="text-sm sm:text-sm md:text-md lg:text-base mr-0"
+                @click="clickCookie(item.action)"
               />
             </div>
           </div>

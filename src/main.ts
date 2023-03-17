@@ -4,7 +4,7 @@ import { createApp } from 'vue';
 
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import ToggleButton from 'primevue/togglebutton';
+import Checkbox from 'primevue/checkbox';
 
 import './style.css';
 import 'primeflex/primeflex.css';
@@ -17,5 +17,5 @@ const app = createApp(App);
 app.use(PrimeVue);
 app.component('Button', Button);
 app.component('Dialog', Dialog);
-app.component('ToggleButton', ToggleButton);
+app.component('Checkbox', Checkbox);
 app.mount('#app');
